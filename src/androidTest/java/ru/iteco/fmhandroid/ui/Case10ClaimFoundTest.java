@@ -7,8 +7,8 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.pressImeActionButton;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -16,8 +16,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
-
-import static ru.iteco.fmhandroid.ui.UpdatedViewMatcher.waitDisplayed;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,17 +38,14 @@ import ru.iteco.fmhandroid.R;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class LoginTest {
+public class Case10ClaimFoundTest {
 
     @Rule
     public ActivityScenarioRule<AppActivity> mActivityScenarioRule =
             new ActivityScenarioRule<>(AppActivity.class);
 
     @Test
-    fun shouldBeAbleToLoadList() {
-        onView(isRoot()).perform(waitDisplayed(R.id.recycler_view, 5000));
-    }
-    public void loginTest() {
+    public void case10ClaimFoundTest() {
         ViewInteraction textInputEditText = onView(
                 allOf(childAtPosition(
                                 childAtPosition(
@@ -61,25 +56,15 @@ public class LoginTest {
         textInputEditText.perform(replaceText("login2"), closeSoftKeyboard());
 
         ViewInteraction textInputEditText2 = onView(
-                allOf(withText("login2"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.login_text_input_layout),
-                                        0),
-                                0),
-                        isDisplayed()));
-        textInputEditText2.perform(pressImeActionButton());
-
-        ViewInteraction textInputEditText3 = onView(
                 allOf(childAtPosition(
                                 childAtPosition(
                                         withId(R.id.password_text_input_layout),
                                         0),
                                 0),
                         isDisplayed()));
-        textInputEditText3.perform(replaceText("password2"), closeSoftKeyboard());
+        textInputEditText2.perform(replaceText("password2"), closeSoftKeyboard());
 
-        ViewInteraction textInputEditText4 = onView(
+        ViewInteraction textInputEditText3 = onView(
                 allOf(withText("password2"),
                         childAtPosition(
                                 childAtPosition(
@@ -87,7 +72,7 @@ public class LoginTest {
                                         0),
                                 0),
                         isDisplayed()));
-        textInputEditText4.perform(pressImeActionButton());
+        textInputEditText3.perform(pressImeActionButton());
 
         ViewInteraction materialButton = onView(
                 allOf(withId(R.id.enter_button), withText("Sign in"), withContentDescription("Save"),
@@ -99,12 +84,34 @@ public class LoginTest {
                         isDisplayed()));
         materialButton.perform(click());
 
-        ViewInteraction imageButton = onView(
-                allOf(withId(R.id.authorization_image_button), withContentDescription("Authorization"),
-                        withParent(allOf(withId(R.id.container_custom_app_bar_include_on_fragment_main),
-                                withParent(IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class)))),
+        ViewInteraction materialTextView = onView(
+                allOf(withId(R.id.all_claims_text_view), withText("all claims"),
+                        childAtPosition(
+                                allOf(withId(R.id.container_list_claim_include_on_fragment_main),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.LinearLayout")),
+                                                1)),
+                                1),
                         isDisplayed()));
-        imageButton.check(matches(isDisplayed()));
+        materialTextView.perform(click());
+
+        ViewInteraction recyclerView = onView(
+                allOf(withId(R.id.claim_list_recycler_view),
+                        childAtPosition(
+                                withId(R.id.all_claims_cards_block_constraint_layout),
+                                4)));
+        recyclerView.perform(actionOnItemAtPosition(35, click()));
+
+        ViewInteraction textView = onView(
+                allOf(withId(R.id.title_text_view), withText("Claim Title"),
+                        withParent(withParent(IsInstanceOf.<View>instanceOf(androidx.cardview.widget.CardView.class))),
+                        isDisplayed()));
+        textView.check(matches(withText("Claim Title")));
+
+        ViewInteraction viewGroup = onView(
+                allOf(withParent(withParent(IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class))),
+                        isDisplayed()));
+        viewGroup.check(matches(isDisplayed()));
     }
 
     private static Matcher<View> childAtPosition(

@@ -6,6 +6,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.pressImeActionButton;
 import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
@@ -46,7 +47,7 @@ public class LoginAndLogoutTest {
     @Test
     public void loginAndLogoutTest() {
         ViewInteraction textInputEditText = onView(withId(R.id.login_text_input_layout));
-        textInputEditText.perform(replaceText("login2"), closeSoftKeyboard());
+        textInputEditText.perform(typeText("login2"), closeSoftKeyboard());
 
         ViewInteraction textInputEditText2 = onView(withId(R.id.password_text_input_layout));
         textInputEditText2.perform(replaceText("password2"), closeSoftKeyboard());
