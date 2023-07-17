@@ -1,2 +1,5 @@
-package ru.netology.page;public class MainPage {
+package ru.netology.page;
+
+public class MainPage {
+
 }
